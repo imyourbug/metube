@@ -1,0 +1,6 @@
+npm install
+npm install vue3-google-oauth2
+npm install vue3-storage
+npm install vue3-route@next
+npm install bootstrap
+npm install @popperjs/core

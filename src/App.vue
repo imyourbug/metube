@@ -1,12 +1,23 @@
-<template></template>
+<template>
+  <Navbar />
+  <router-view/>
+</template>
 
 <script>
 import Login from "./components/Login.vue";
+import Navbar from "./components/Navbar.vue";
+import About from "./components/About.vue";
+import Home from "./components/Home.vue";
+import Error from "./components/Error.vue";
 
 export default {
   name: "App",
   components: {
+    Navbar,
     Login,
+    About,
+    Home,
+    Error
   },
 };
 </script>

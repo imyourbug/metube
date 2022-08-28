@@ -1,19 +1,4 @@
 <template>
-  <!-- 
-    <div class="hello">
-      <h2 v-if="user">Logged in user: {{ user }}</h2>
-
-      <button
-        @click="handleSignIn"
-        :disabled="!Vue3GoogleOauth.isInit || Vue3GoogleOauth.isAuthorized"
-      >
-        Sign In
-      </button>
-      <button @click="handleSignOut" :disabled="!Vue3GoogleOauth.isAuthorized">
-        Sign Out
-      </button>
-    </div>
-  </div> -->
   <section class="login-block">
     <div class="container-fluid">
       <div class="row">
@@ -115,7 +100,7 @@ export default {
 
   data() {
     return {
-      user: "",
+      user: {},
     };
   },
 
@@ -123,16 +108,17 @@ export default {
     async handleSignIn() {
       try {
         const googleUser = await this.$gAuth.signIn();
-        console.log(googleUser.getBasicProfile());
+        // console.log(googleUser.getBasicProfile().getId());
 
         if (!googleUser) {
-          return null;
+          this.$router.push({ user: this.user, path: "/login" });
         }
-
-        this.user = googleUser.getBasicProfile().getEmail();
-      } catch (error) {
-        console.log(error);
-        return null;
+        // redirect route
+        this.user = googleUser;
+        // console.log(this.user);
+        this.$router.push({ user: this.user, path: "/home" });
+      } catch (e) {
+        console.log(e);
       }
     },
   },
@@ -215,7 +201,6 @@ body {
   cursor: pointer;
   -webkit-transition: all ease-in 0.3s;
   transition: all ease-in 0.3s;
-  margin-left: 40%;
 }
 
 .btn {
@@ -248,7 +233,6 @@ body {
   color: #545454;
   background-color: #ffffff;
   box-shadow: 0 1px 2px 1px #ddd;
-  margin-left: 25%;
 }
 
 .or-container {
