@@ -96,30 +96,22 @@ import { inject } from "vue";
 
 export default {
   name: "Login",
-  props: {},
-
-  data() {
-    return {
-      user: {},
-    };
-  },
 
   methods: {
     async handleSignIn() {
       try {
         const googleUser = await this.$gAuth.signIn();
-        // console.log(googleUser.getBasicProfile().getId());
-
-        if (!googleUser) {
-          this.$router.push({ user: this.user, path: "/login" });
-        }
-        // redirect route
-        this.user = googleUser;
-        // console.log(this.user);
-        this.$router.push({ user: this.user, path: "/home" });
+        // save user login
+        this.saveUser(googleUser);
+        this.$router.push({ path: "/" });
       } catch (e) {
         console.log(e);
       }
+    },
+    saveUser(user) {
+      localStorage.setItem("id", user.getBasicProfile().getId());
+      localStorage.setItem("name", user.getBasicProfile().getName());
+      localStorage.setItem("email", user.getBasicProfile().getEmail());
     },
   },
 

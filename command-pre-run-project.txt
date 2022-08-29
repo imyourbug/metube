@@ -4,3 +4,4 @@ npm install vue3-storage
 npm install vue3-route@next
 npm install bootstrap
 npm install @popperjs/core
+npm install axios
