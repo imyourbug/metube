@@ -46,15 +46,15 @@
 
 <script>
 import { RepositoryFactory } from "@/api/repositories/RepositoryFactory.js";
-// import { EventBus } from "@/EventBus";
+// import { ref } from "vue";
 
 const VideoRepository = RepositoryFactory.get("video");
 
 export default {
-  name: "ListVideo",
+  name: "DetailVideo",
   data() {
     return {
-      videos: [],
+      video: [],
       errors: [],
     };
   },

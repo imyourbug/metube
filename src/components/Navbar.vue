@@ -1,14 +1,25 @@
 <template>
   <div class="row menu-header">
     <div class="col-4">
-      <img src="" />
-    </div>
-    <div class="col-4">
       <div id="nav">
         <router-link class="text-menu-header" to="/">Home</router-link> |
         <router-link class="text-menu-header" to="/about">About</router-link> |
-        <router-link class="text-menu-header" to="/about">Setting</router-link>
+        <router-link class="text-menu-header" to="/about"> Setting</router-link>
       </div>
+    </div>
+    <div class="col-4">
+      <form class="d-flex">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          v-model="key_word"
+        />
+        <a @click.prevent="searchVideo" class="btn btn-outline-success">
+          Search
+        </a>
+      </form>
     </div>
     <div class="col-4">
       <div id="nav">
@@ -17,7 +28,11 @@
           <router-link class="btn-login" to="/login" v-if="!isLogged"
             >Login</router-link
           >
-          <a href="#" @click="handleSignOut" class="btn-logout" v-if="isLogged"
+          <a
+            href="#"
+            @click.prevent="handleSignOut"
+            class="btn-logout"
+            v-if="isLogged"
             >Logout</a
           >
         </div>
@@ -27,12 +42,15 @@
 </template>
 
 <script>
+import { EventBus } from "@/EventBus";
+
 export default {
   name: "Navbar",
   data() {
     return {
       user_name: "",
       isLogged: true,
+      key_word: "",
     };
   },
   methods: {
@@ -54,19 +72,20 @@ export default {
 
       this.user_name = "";
     },
+    searchVideo() {
+      console.log("/videos/search?key_word=" + this.key_word);
+      // Send key_word to ListVideo component
+      EventBus.$emit("send-key-word", this.key_word);
+      this.$router.push({
+        path: "/videos/search",
+      });
+    },
   },
   setup() {
     const user_name = localStorage.name ?? "";
     return {
       user_name,
     };
-  },
-  watch: {
-    user_name: {
-      handler(newVar) {
-        this.user_name = newVar;
-      },
-    },
   },
 };
 </script>
@@ -76,13 +95,13 @@ a {
   text-decoration: none !important;
 }
 a.text-menu-header {
-  color: #ff8b94 !important;
+  color: whitesmoke !important;
 }
 a.text-menu-header:hover {
   color: green !important;
 }
 .menu-header {
-  background-color: #a8e6cf;
+  background-color: #212529;
   padding: 2% 2%;
 }
 .navbar-block-right {

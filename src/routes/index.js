@@ -16,6 +16,22 @@ const routes = [
         },
     },
     {
+        path: '/videos/search',
+        name: 'SearchVideo',
+        component: Home,
+        meta: {
+            requiresAuth: true
+        },
+    },
+    {
+        path: '/videos/detail',
+        name: 'DetailVideo',
+        component: Home,
+        meta: {
+            requiresAuth: true
+        },
+    },
+    {
         path: '/about',
         name: 'About',
         component: About,
@@ -26,9 +42,9 @@ const routes = [
         component: Login,
     },
     {
-        path: '/:pathMatch(.*)*',
-        name: 'Error',
-        component: Error,
+        // path: '/:pathMatch(.*)*',
+        // name: 'Error',
+        // component: Error,
     }
 ]
 
