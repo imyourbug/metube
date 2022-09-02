@@ -103,7 +103,9 @@ export default {
         const googleUser = await this.$gAuth.signIn();
         // save user login
         this.saveUser(googleUser);
-        this.$router.push({ path: "/" });
+        // Change name
+        this.emitter.emit("change-name");
+        this.$router.push({ path: "/home" });
       } catch (e) {
         console.log(e);
       }
@@ -118,6 +120,13 @@ export default {
   setup() {
     const Vue3GoogleOauth = inject("Vue3GoogleOauth");
 
+    const unSave = () => {
+      localStorage.removeItem("id");
+      localStorage.removeItem("name");
+      localStorage.removeItem("email");
+    };
+
+    unSave();
     return {
       Vue3GoogleOauth,
     };

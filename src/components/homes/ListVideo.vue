@@ -15,14 +15,14 @@
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="btn-group">
                     <a
-                      :href="'/videos/detail/id?=' + video.id"
+                      :href="'/videos/detail/' + video.id"
                       type="button"
                       class="btn btn-sm btn-outline-secondary"
                     >
                       Xem
                     </a>
                     <a
-                      :href="'/videos/detail/id?=' + video.id"
+                      :href="'/videos/detail/' + video.id"
                       type="button"
                       class="btn btn-sm btn-outline-secondary"
                     >
@@ -38,7 +38,6 @@
       </div>
     </div>
   </main>
-
   <footer class="text-muted py-5">
     <div class="container"></div>
   </footer>
@@ -46,7 +45,6 @@
 
 <script>
 import { RepositoryFactory } from "@/api/repositories/RepositoryFactory.js";
-// import { EventBus } from "@/EventBus";
 
 const VideoRepository = RepositoryFactory.get("video");
 
@@ -55,49 +53,16 @@ export default {
   data() {
     return {
       videos: [],
-      errors: [],
     };
   },
-  created() {
-    this.reload();
-  },
-  methods: {
-    reload() {
-      const path = this.$router.currentRoute.value.path;
-      console.log(path);
-      if (path === "video/search") {
-        VideoRepository.searchVideoByKeyWord(
-          this.$router.currentRoute.value.query["key_word"]
-        )
-          .then((response) => {
-            this.videos = response.data.items;
-            console.log("Search", this.videos);
-          })
-          .catch((e) => {
-            this.errors.push(e);
-          });
-      } else if (path === "video/detail") {
-        VideoRepository.getDetailVideo(
-          this.$router.currentRoute.value.query["id"]
-        )
-          .then((response) => {
-            this.videos = response.data.items;
-            console.log("Detail", this.videos);
-          })
-          .catch((e) => {
-            this.errors.push(e);
-          });
-      } else {
-        VideoRepository.getListTrendingVideos()
-          .then((response) => {
-            this.videos = response.data.items;
-            console.log("Trend", this.videos);
-          })
-          .catch((e) => {
-            this.errors.push(e);
-          });
-      }
-    },
+  mounted() {
+    VideoRepository.getListTrendingVideos()
+      .then((response) => {
+        this.videos = response.data.items;
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   },
 };
 </script>

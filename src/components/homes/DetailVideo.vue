@@ -1,35 +1,98 @@
 <template>
   <main>
     <div class="album py-5 bg-light">
-      <div class="container">
-        <div
-          class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
-          v-if="videos && videos.length > 0"
-        >
-          <div class="col" v-for="(video, key) in videos" v-bind:key="key">
-            <div class="card shadow-sm">
-              <img :src="video.snippet.thumbnails.high.url" />
-
-              <div class="card-body">
-                <p class="card-text">{{ video.snippet.title }}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <a
-                      :href="'/videos/detail/id?=' + video.id"
-                      type="button"
-                      class="btn btn-sm btn-outline-secondary"
+      <div class="container" v-if="videos && videos.length > 0">
+        <div class="row">
+          <div class="col-8" v-for="(video, key) in videos" v-bind:key="key">
+            <img :src="video.snippet.thumbnails.high.url" />
+            <div class="content block-video">
+              <div class="row">
+                <div class="col-6 text">
+                  <p>
+                    <!-- <strong>{{ video.snippet.title }}</strong> -->
+                    <strong
+                      >Vue JS 3 Tutorial - Project #03 | Router Guards & Common
+                      Layout Vue 3</strong
                     >
-                      Xem
-                    </a>
-                    <a
-                      :href="'/videos/detail/id?=' + video.id"
-                      type="button"
-                      class="btn btn-sm btn-outline-secondary"
-                    >
-                      Chi tiết
-                    </a>
+                    <br />
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 text">
+                  <p>
+                    <strong
+                      >{{ roundNumber(video.statistics.viewCount) }} views
+                    </strong>
+                    {{ video.snippet.title }}
+                  </p>
+                </div>
+                <div class="col-6">
+                  <i class="fa-solid fa-thumbs-up"></i>
+                  {{ roundNumber(video.statistics.likeCount) }}
+                  &emsp;
+                  <i class="fa-solid fa-thumbs-down"></i> Dislike &emsp;
+                  <i class="fa-solid fa-share"></i> Share
+                </div>
+              </div>
+            </div>
+            <div class="block-comment">
+              <div class="row">
+                <div class="col-1">
+                  <img src="https://bulma.io/images/placeholders/96x96.png" />
+                </div>
+                <div class="col-11 comment">
+                  <p>
+                    <strong>Khai</strong>
+                    <br />
+                    Comment
+                    <br />
+                    <small><a>Like</a> · <a>Reply</a> · 2 hrs</small>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div
+              class="row"
+              v-for="(video_related, key) in related_videos"
+              v-bind:key="key"
+            >
+              <div class="col-4">
+                <p class="image is-128x128">
+                  <img :src="video_related.snippet.thumbnails.default.url" />
+                </p>
+              </div>
+              <div class="col-8">
+                <div class="block-video">
+                  <div class="content">
+                    <p>
+                      <strong>{{ video_related.snippet.title }}</strong>
+                      <br />
+                      {{ video_related.snippet.title }}
+                    </p>
                   </div>
-                  <small class="text-muted">9 minutes</small>
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <div class="btn-group">
+                      <a
+                        :href="'/videos/detail/' + video_related.id"
+                        type="button"
+                        class="btn btn-sm btn-outline-secondary"
+                      >
+                        Xem
+                      </a>
+                      <a
+                        :href="'/videos/detail/' + video_related.id"
+                        type="button"
+                        class="btn btn-sm btn-outline-secondary"
+                      >
+                        Chi tiết
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -38,10 +101,6 @@
       </div>
     </div>
   </main>
-
-  <footer class="text-muted py-5">
-    <div class="container"></div>
-  </footer>
 </template>
 
 <script>
@@ -54,53 +113,73 @@ export default {
   name: "DetailVideo",
   data() {
     return {
-      video: [],
-      errors: [],
+      videos: [],
+      related_videos: [],
+      id: "",
     };
   },
-  created() {
+  mounted() {
     this.reload();
   },
   methods: {
-    reload() {
-      const path = this.$router.currentRoute.value.path;
-      console.log(path);
-      if (path === "video/search") {
-        VideoRepository.searchVideoByKeyWord(
-          this.$router.currentRoute.value.query["key_word"]
-        )
-          .then((response) => {
-            this.videos = response.data.items;
-            console.log("Search", this.videos);
-          })
-          .catch((e) => {
-            this.errors.push(e);
+    async reload() {
+      this.id = this.$router.currentRoute.value.params.id;
+      await VideoRepository.getVideoByID(this.id)
+        .then((response) => {
+          this.videos = response.data.items;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      //
+      this.getRelatedVideos();
+    },
+    async getRelatedVideos() {
+      let ids = [];
+      await VideoRepository.getRelatedVideos(this.id)
+        .then((response) => {
+          response.data.items.forEach(function (item) {
+            ids.push(item.id.videoId);
           });
-      } else if (path === "video/detail") {
-        VideoRepository.getDetailVideo(
-          this.$router.currentRoute.value.query["id"]
-        )
-          .then((response) => {
-            this.videos = response.data.items;
-            console.log("Detail", this.videos);
-          })
-          .catch((e) => {
-            this.errors.push(e);
-          });
-      } else {
-        VideoRepository.getListTrendingVideos()
-          .then((response) => {
-            this.videos = response.data.items;
-            console.log("Trend", this.videos);
-          })
-          .catch((e) => {
-            this.errors.push(e);
-          });
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      this.getMultipleVideoByIDs(ids);
+    },
+    getMultipleVideoByIDs(ids) {
+      VideoRepository.getMultipleVideoByIDs(ids)
+        .then((response) => {
+          this.related_videos = response.data.items;
+          console.log("ids:", this.related_videos);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    roundNumber(num) {
+      if (num > 999999999) {
+        return +(Math.round(num / 1000000000 + "e+1") + "e-1") + "B";
       }
+      if (num > 999999) {
+        return +(Math.round(num / 1000000 + "e+1") + "e-1") + "M";
+      }
+      if (num > 999) {
+        return +(Math.round(num / 1000 + "e+1") + "e-1") + "K";
+      }
+
+      return num;
     },
   },
 };
 </script>
 
 <style>
+.comment {
+  text-align: left;
+  padding-left: 50px !important;
+}
+.text {
+  text-align: left;
+}
 </style>

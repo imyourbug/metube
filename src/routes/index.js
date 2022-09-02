@@ -3,12 +3,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from "../components/Login.vue";
 // import Navbar from "../components/Navbar.vue";
 import About from "../components/About.vue";
-import Home from "../components/Home.vue";
-import Error from "../components/Error.vue";
+import Home from "@/components/Home.vue";
+import SearchVideo from "@/components/homes/SearchVideo.vue";
+import DetailVideo from "@/components/homes/DetailVideo.vue";
+// import Error from "../components/Error.vue";
 
 const routes = [
     {
-        path: '/',
+        path: '/home',
         name: 'Home',
         component: Home,
         meta: {
@@ -18,15 +20,15 @@ const routes = [
     {
         path: '/videos/search',
         name: 'SearchVideo',
-        component: Home,
+        component: SearchVideo,
         meta: {
             requiresAuth: true
         },
     },
     {
-        path: '/videos/detail',
+        path: '/videos/detail/:id',
         name: 'DetailVideo',
-        component: Home,
+        component: DetailVideo,
         meta: {
             requiresAuth: true
         },

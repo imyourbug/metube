@@ -1,9 +1,10 @@
 <template>
   <ListVideo />
+  
 </template>
 
 <script>
-import ListVideo from "./homes/ListVideo.vue";
+import ListVideo from "@/components/homes/ListVideo.vue";
 
 export default {
   name: "Home",
