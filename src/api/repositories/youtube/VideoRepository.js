@@ -4,7 +4,7 @@ const baseDomain = 'https://www.googleapis.com';
 const baseUrl = `${baseDomain}/youtube/v3`;
 const part = 'snippet,contentDetails,statistics'
 
-const keyAPI = 'AIzaSyCClLpj_uqqJDqtt_X5n7yvJLT_qsub84M';
+const keyAPI = 'AIzaSyDaHqf1E8vR56ZKUM1zu7faa9I8hfOt1E8';
 // const resource = '';
 
 export default {
@@ -58,4 +58,14 @@ export default {
             }
         });
     },
+    getCommentsByVideoID(id) {
+        return Repository.get(`${baseUrl}/commentThreads`, {
+            params: {
+                part: 'snippet,replies',
+                key: keyAPI,
+                textFormat: 'plainText',
+                videoId: id,
+            }
+        });
+    }
 }

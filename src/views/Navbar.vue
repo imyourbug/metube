@@ -24,7 +24,7 @@
     <div class="col-4">
       <div id="nav">
         <div class="navbar-block-right">
-          <a class="txt-user-name">Hello {{ user_name }}</a> |
+          <a class="txt-user-name"> {{ user_name }}</a> |
           <router-link class="btn-login" to="/login" v-if="!isLogged"
             >Login</router-link
           >
@@ -43,19 +43,20 @@
 
 <script>
 export default {
-  name: "Navbar",
+  name: 'Navbar',
   data() {
     return {
-      user_name: "",
+      user_name: '',
+      avatar_user: '',
       isLogged: false,
-      key_word: "",
+      key_word: '',
     };
   },
   created() {
     this.reload();
   },
   mounted() {
-    this.emitter.on("change-name", () => {
+    this.emitter.on('change-name', () => {
       this.reload();
     });
   },
@@ -65,31 +66,30 @@ export default {
         await this.$gAuth.signOut();
         this.unSaveUser();
         this.isLogged = !this.isLogged;
-        this.user_name = "";
+        this.user_name = '';
 
-        this.$router.push({ path: "/login" });
+        this.$router.push({ path: '/login' });
       } catch (error) {
         console.log(error);
       }
     },
     unSaveUser() {
-      localStorage.removeItem("id");
-      localStorage.removeItem("name");
-      localStorage.removeItem("email");
+      localStorage.clear();
     },
     searchVideo() {
       if (this.key_word.trim()) {
         // Send key_word to ListVideo component
-        this.emitter.emit("search-video", this.key_word);
+        this.emitter.emit('search-video', this.key_word);
 
         this.$router.push({
-          path: "/videos/search",
+          path: `/videos/search/${this.key_word}`,
         });
       }
     },
     reload() {
       this.isLogged = !this.isLogged;
-      this.user_name = localStorage.name ?? "";
+      this.user_name = localStorage.name ?? '';
+      this.avatar_user = localStorage.avatar_user ?? '';
     },
   },
 };

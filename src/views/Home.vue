@@ -4,10 +4,10 @@
 </template>
 
 <script>
-import ListVideo from "@/components/homes/ListVideo.vue";
+import ListVideo from '@/views/videos/ListVideo.vue';
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     ListVideo,
   },

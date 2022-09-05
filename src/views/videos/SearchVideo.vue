@@ -54,22 +54,25 @@ import { RepositoryFactory } from "@/api/repositories/RepositoryFactory.js";
 const VideoRepository = RepositoryFactory.get("video");
 
 export default {
-  name: "SearchVideo",
+  name: 'SearchVideo',
   data() {
     return {
       videos: [],
-      key_word: "",
+      key_word: '',
     };
   },
+  created() {
+    this.key_word = this.$router.currentRoute.value.params.key_word;
+  },
   mounted() {
-    this.emitter.on("search-video", (key_word) => {
+    this.emitter.on('search-video', (key_word) => {
       this.key_word = key_word;
-      this.reload(this.key_word);
+      this.reload();
     });
   },
   methods: {
-    reload(key_word) {
-      VideoRepository.searchVideoByKeyWord(key_word)
+    reload() {
+      VideoRepository.searchVideoByKeyWord(this.key_word)
         .then((response) => {
           this.videos = response.data.items;
           console.log(this.videos);

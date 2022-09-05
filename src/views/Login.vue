@@ -92,10 +92,10 @@
 </template>
 
 <script>
-import { inject } from "vue";
+import { inject } from 'vue';
 
 export default {
-  name: "Login",
+  name: 'Login',
 
   methods: {
     async handleSignIn() {
@@ -104,26 +104,27 @@ export default {
         // save user login
         this.saveUser(googleUser);
         // Change name
-        this.emitter.emit("change-name");
-        this.$router.push({ path: "/home" });
+        console.log(googleUser);
+        this.emitter.emit('change-name');
+        this.$router.push({ path: '/home' });
       } catch (e) {
         console.log(e);
       }
     },
     saveUser(user) {
-      localStorage.setItem("id", user.getBasicProfile().getId());
-      localStorage.setItem("name", user.getBasicProfile().getName());
-      localStorage.setItem("email", user.getBasicProfile().getEmail());
+      localStorage.setItem('id', user.getBasicProfile().getId());
+      localStorage.setItem('name', user.getBasicProfile().getName());
+      localStorage.setItem('email', user.getBasicProfile().getEmail());
+      localStorage.setItem('access_token', user.Cc.access_token);
+      localStorage.setItem('avatar_user', user.getBasicProfile().getImageUrl());
     },
   },
 
   setup() {
-    const Vue3GoogleOauth = inject("Vue3GoogleOauth");
+    const Vue3GoogleOauth = inject('Vue3GoogleOauth');
 
     const unSave = () => {
-      localStorage.removeItem("id");
-      localStorage.removeItem("name");
-      localStorage.removeItem("email");
+      localStorage.clear();
     };
 
     unSave();
@@ -134,7 +135,7 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
 body {
   background-color: #f2f7fb;

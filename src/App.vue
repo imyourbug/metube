@@ -1,14 +1,14 @@
 <template>
   <Navbar />
-  <router-view/>
+  <router-view />
 </template>
 
 <script>
-import Login from "@/components/Login.vue";
-import Navbar from "@/components/Navbar.vue";
-import About from "@/components/About.vue";
-import Home from "@/components/Home.vue";
-import Error from "@/components/Error.vue";
+import Login from "@/views/Login.vue";
+import Navbar from "@/views/Navbar.vue";
+import About from "@/views/About.vue";
+import Home from "@/views/Home.vue";
+import Error from "@/views/Error.vue";
 
 export default {
   name: "App",
@@ -17,7 +17,7 @@ export default {
     Login,
     About,
     Home,
-    Error
+    Error,
   },
 };
 </script>

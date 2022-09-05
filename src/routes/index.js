@@ -1,12 +1,10 @@
 // export default router
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from "../components/Login.vue";
-// import Navbar from "../components/Navbar.vue";
-import About from "../components/About.vue";
-import Home from "@/components/Home.vue";
-import SearchVideo from "@/components/homes/SearchVideo.vue";
-import DetailVideo from "@/components/homes/DetailVideo.vue";
-// import Error from "../components/Error.vue";
+import Login from "../views/Login.vue";
+import About from "../views/About.vue";
+import Home from "@/views/Home.vue";
+import SearchVideo from "@/views/videos/SearchVideo.vue";
+import DetailVideo from "@/views/videos/DetailVideo.vue";
 
 const routes = [
     {
@@ -18,7 +16,7 @@ const routes = [
         },
     },
     {
-        path: '/videos/search',
+        path: '/videos/search/:keyword',
         name: 'SearchVideo',
         component: SearchVideo,
         meta: {
