@@ -1,13 +1,11 @@
 <template>
   <div class="row menu-header">
     <div class="col-4">
-      <div id="nav">
-        <router-link class="text-menu-header" to="/home">Home</router-link> |
-        <router-link class="text-menu-header" to="/about">About</router-link> |
-        <router-link class="text-menu-header" to="/about"> Setting</router-link>
-      </div>
+      <router-link class="text-menu-header" to="/home"
+        ><img class="logo" src="@/assets/ytb.png" /></router-link
+      >&emsp;
     </div>
-    <div class="col-4">
+    <div class="col-4 block-search">
       <form class="d-flex">
         <input
           class="form-control me-2"
@@ -21,42 +19,44 @@
         </a>
       </form>
     </div>
-    <div class="col-4">
-      <div id="nav">
-        <div class="navbar-block-right">
-          <a class="txt-user-name"> {{ user_name }}</a> |
-          <router-link class="btn-login" to="/login" v-if="!isLogged"
-            >Login</router-link
-          >
-          <a
-            href="#"
-            @click.prevent="handleSignOut"
-            class="btn-logout"
-            v-if="isLogged"
-            >Logout</a
-          >
-        </div>
+    <div class="col-4 block-user">
+      <div id="nav d-flex">
+        <router-link class="btn-login" to="/login" v-if="!isLogged"
+          >Login</router-link
+        >
+        <a
+          href="#"
+          @click.prevent="handleSignOut"
+          class="btn-logout"
+          v-if="isLogged"
+          ><i class="fa-solid fa-bell nav-icon"></i>&emsp;<img
+            class="nav-avatar"
+            :src="avatar_user"
+          />
+          &ensp;Logout</a
+        >
       </div>
     </div>
   </div>
+  <router-view />
 </template>
 
 <script>
 export default {
-  name: 'Navbar',
+  name: "Navbar",
   data() {
     return {
-      user_name: '',
-      avatar_user: '',
+      user_name: "",
+      avatar_user: "",
       isLogged: false,
-      key_word: '',
+      key_word: "",
     };
   },
   created() {
     this.reload();
   },
   mounted() {
-    this.emitter.on('change-name', () => {
+    this.emitter.on("change-name", () => {
       this.reload();
     });
   },
@@ -66,9 +66,9 @@ export default {
         await this.$gAuth.signOut();
         this.unSaveUser();
         this.isLogged = !this.isLogged;
-        this.user_name = '';
+        this.user_name = "";
 
-        this.$router.push({ path: '/login' });
+        this.$router.push({ path: "/login" });
       } catch (error) {
         console.log(error);
       }
@@ -79,7 +79,7 @@ export default {
     searchVideo() {
       if (this.key_word.trim()) {
         // Send key_word to ListVideo component
-        this.emitter.emit('search-video', this.key_word);
+        this.emitter.emit("search-video", this.key_word);
 
         this.$router.push({
           path: `/videos/search/${this.key_word}`,
@@ -88,8 +88,8 @@ export default {
     },
     reload() {
       this.isLogged = !this.isLogged;
-      this.user_name = localStorage.name ?? '';
-      this.avatar_user = localStorage.avatar_user ?? '';
+      this.user_name = localStorage.name ?? "";
+      this.avatar_user = localStorage.avatar_user ?? "";
     },
   },
 };
@@ -106,7 +106,7 @@ a.text-menu-header:hover {
   color: green !important;
 }
 .menu-header {
-  background-color: #212529;
+  /* background-color: #212529; */
   padding: 2% 2%;
 }
 .navbar-block-right {
@@ -115,5 +115,27 @@ a.text-menu-header:hover {
   align-items: center;
   text-align: center;
   justify-content: center;
+}
+.logo {
+  width: 200px;
+}
+.block-search {
+  padding-top: 25px;
+}
+.block-user {
+  padding-top: 20px;
+}
+a.txt-user-name,
+.btn-login,
+.btn-logout {
+  color: black;
+  font-weight: bold;
+}
+.nav-avatar {
+  width: 35px;
+  border-radius: 50%;
+}
+.nav-icon {
+  font-size: 20px;
 }
 </style>

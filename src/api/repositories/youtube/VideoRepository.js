@@ -4,7 +4,8 @@ const baseDomain = 'https://www.googleapis.com';
 const baseUrl = `${baseDomain}/youtube/v3`;
 const part = 'snippet,contentDetails,statistics'
 
-const keyAPI = 'AIzaSyDaHqf1E8vR56ZKUM1zu7faa9I8hfOt1E8';
+const access_token = localStorage.getItem('access_token') ?? '';
+const keyAPI = 'AIzaSyD97uUBO0mbfDQ_oJTz0FdQZ0HOPFHsFjw';
 // const resource = '';
 
 export default {
@@ -65,6 +66,28 @@ export default {
                 key: keyAPI,
                 textFormat: 'plainText',
                 videoId: id,
+            }
+        });
+    },
+    addComment(video_id, channel_id, comment) {
+        console.log(video_id, channel_id, comment, access_token);
+        return Repository.post(`${baseUrl}/commentThreads/`, {
+            'body': {
+                "snippet": {
+                    "channelId": channel_id,
+                    "topLevelComment": {
+                        "snippet": {
+                            "textOriginal": comment
+                        }
+                    },
+                    "videoId": video_id
+                }
+            }
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + access_token
             }
         });
     }

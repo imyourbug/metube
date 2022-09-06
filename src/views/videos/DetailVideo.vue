@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="album py-5 bg-light">
+    <div class="album bg-light">
       <div class="container" v-if="videos && videos.length > 0">
         <div class="row">
           <div class="col-8" v-for="(video, key) in videos" v-bind:key="key">
@@ -57,8 +57,12 @@
                     :src='avatar_user'
                   />
                 </div>
-                <div class="col-11 input-comment">
-                  <input class="txt-comment form-control" type="text" placeholder="Add a comment..." width="100%" />
+                <div class="col-9 input-comment">
+                  <input class="txt-comment form-control" type="text" placeholder="Add a comment..." width="100%" v-model="comment"/>
+                  <p v-if="isError" class="text-error">Invalid comment!</p>
+                </div>
+                <div class="col-2 add-comment">
+                  <input type="button" value="Comment" class="btn btn-success" @click="addComment"/>
                 </div>
               </div>
             </div>
@@ -144,9 +148,11 @@ export default {
       videos: [],
       related_videos: [],
       comments: [],
+      comment: '',
       id: '',
       avatar_user: '',
       url: '',
+      isError: false,
     };
   },
   created() {
@@ -159,6 +165,7 @@ export default {
       await VideoRepository.getVideoByID(this.id)
         .then((response) => {
           this.videos = response.data.items;
+          console.log(this.videos);
         })
         .catch((e) => {
           console.log(e);
@@ -171,7 +178,6 @@ export default {
       this.url = 'http://www.youtube.com/embed/' + this.id;
       // get avatar user
       this.avatar_user = localStorage.avatar_user ?? '';
-      console.log(this.avatar_user);
 
     },
     async getRelatedVideos() {
@@ -206,6 +212,21 @@ export default {
         .catch((e) => {
           console.log(e);
         });
+    },
+    addComment() {
+      if (this.comment.trim()) {
+        this.isError = false;
+        VideoRepository.addComment(this.id, this.videos[0].snippet.channelId, this.comment)
+        .then((response) => {
+          this.reload(this.id);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      }
+      else {
+        this.isError = true;
+      }
     },
     changeOtherVideo(id) {
       this.id = id;
@@ -255,5 +276,9 @@ export default {
   border-radius: 50%;
   width: 50px;
   align-items: center;
+}
+.text-error{
+  color: red;
+  text-align: left;
 }
 </style>
